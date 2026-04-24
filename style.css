@@ -1,51 +1,851 @@
+/* =============================================
+   MY PERSONAL GAMING SITE
+   Two Themes: Silent Hill | Crysis
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&family=Cinzel:wght@400;700&display=swap');
+
+/* ---- CSS VARIABLES ---- */
+:root {
+  --transition-speed: 0.8s;
+}
+
+/* ==== SILENT HILL THEME ==== */
+body.theme-silenthill {
+  --bg-primary: #0a0806;
+  --bg-secondary: #110e0a;
+  --bg-card: #1a1510;
+  --text-primary: #c8b89a;
+  --text-secondary: #7a6a55;
+  --text-heading: #e8d5b7;
+  --accent: #8b2e2e;
+  --accent-glow: rgba(139, 46, 46, 0.4);
+  --accent2: #c4773a;
+  --border-color: #3a2e22;
+  --fog-color: rgba(180, 150, 110, 0.04);
+  --font-heading: 'Special Elite', cursive;
+  --font-body: 'Share Tech Mono', monospace;
+  --noise-opacity: 0.06;
+  --pyramid-visible: flex;
+  --crysis-ui: none;
+}
+
+/* ==== CRYSIS THEME ==== */
+body.theme-crysis {
+  --bg-primary: #020d0e;
+  --bg-secondary: #041518;
+  --bg-card: #051e22;
+  --text-primary: #9ee8f0;
+  --text-secondary: #4a8a92;
+  --text-heading: #d0f8ff;
+  --accent: #00e5ff;
+  --accent-glow: rgba(0, 229, 255, 0.35);
+  --accent2: #00ff88;
+  --border-color: #0a3a42;
+  --fog-color: rgba(0, 200, 255, 0.02);
+  --font-heading: 'Rajdhani', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --noise-opacity: 0.03;
+  --pyramid-visible: none;
+  --crysis-ui: block;
+}
+
+/* =============================================
+   RESET & BASE
+   ============================================= */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-    margin: 0;
-    font-family: Arial;
-    transition: 0.5s;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color var(--transition-speed) ease,
+              color var(--transition-speed) ease;
+  cursor: default;
 }
 
-/* Silent Hill Mode */
-.silent-mode {
-    background: #111;
-    color: #ccc;
+/* =============================================
+   NOISE TEXTURE OVERLAY
+   ============================================= */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
 }
 
-/* Crysis Mode */
-.crysis-mode {
-    background: #0f2027;
-    color: #00ffcc;
+/* =============================================
+   FOG EFFECT (Silent Hill)
+   ============================================= */
+.fog-layer {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  background: 
+    radial-gradient(ellipse 80% 60% at 20% 80%, var(--fog-color) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, var(--fog-color) 0%, transparent 70%);
+  animation: fogDrift 20s ease-in-out infinite alternate;
+  transition: opacity var(--transition-speed);
 }
 
-/* Container */
-.container {
-    text-align: center;
-    padding: 50px;
+@keyframes fogDrift {
+  0% { transform: translateX(0) translateY(0); opacity: 1; }
+  50% { transform: translateX(-30px) translateY(10px); opacity: 0.7; }
+  100% { transform: translateX(30px) translateY(-10px); opacity: 1; }
 }
 
-/* Toggle */
-.toggle-container {
-    width: 100px;
-    height: 50px;
-    background: #444;
-    border-radius: 50px;
-    margin: 20px auto;
-    position: relative;
-    cursor: pointer;
+/* =============================================
+   THEME SWITCHER - SLIDER
+   ============================================= */
+.theme-switcher-container {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-#toggle {
-    width: 40px;
-    height: 40px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    transition: 0.4s;
+.theme-label {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  transition: color 0.4s;
+  user-select: none;
 }
 
-/* وقتی تم عوض میشه */
-.crysis-mode #toggle {
-    left: 55px;
-    background: #00ffcc;
+.theme-label.active {
+  color: var(--accent);
+}
+
+.slider-track {
+  width: 64px;
+  height: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  position: relative;
+  cursor: pointer;
+  transition: border-color 0.4s, box-shadow 0.4s;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.slider-track:hover {
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s;
+  box-shadow: 0 0 8px var(--accent-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+body.theme-crysis .slider-thumb {
+  transform: translateX(32px);
+}
+
+/* =============================================
+   TRANSITION OVERLAY (theme change animation)
+   ============================================= */
+.transition-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at center, var(--accent) 0%, transparent 70%);
+  transition: opacity 0.3s;
+}
+
+.transition-overlay.active {
+  opacity: 0.15;
+}
+
+/* =============================================
+   PYRAMID HEAD ELEMENT (Silent Hill only)
+   ============================================= */
+.pyramid-head-figure {
+  display: var(--pyramid-visible);
+  position: fixed;
+  bottom: 0;
+  left: -20px;
+  z-index: 50;
+  opacity: 0.12;
+  animation: pyramidBreath 8s ease-in-out infinite;
+  pointer-events: none;
+  transition: opacity 1s, display 0.1s;
+  flex-direction: column;
+  align-items: center;
+}
+
+body.theme-crysis .pyramid-head-figure {
+  display: none;
+}
+
+@keyframes pyramidBreath {
+  0%, 100% { transform: translateY(0px); opacity: 0.12; }
+  50% { transform: translateY(-8px); opacity: 0.18; }
+}
+
+.pyramid-head-figure svg {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 0 20px rgba(139, 46, 46, 0.5));
+}
+
+/* =============================================
+   CRYSIS HUD ELEMENTS
+   ============================================= */
+.crysis-hud {
+  display: var(--crysis-ui);
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+body.theme-silenthill .crysis-hud {
+  display: none;
+}
+
+.hud-corner {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  opacity: 0.3;
+}
+
+.hud-corner.tl { top: 20px; left: 20px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); }
+.hud-corner.tr { top: 20px; right: 20px; border-top: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+.hud-corner.bl { bottom: 20px; left: 20px; border-bottom: 2px solid var(--accent); border-left: 2px solid var(--accent); }
+.hud-corner.br { bottom: 20px; right: 20px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+
+.hud-scanline {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: scanline 6s linear infinite;
+  opacity: 0.15;
+}
+
+@keyframes scanline {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+/* =============================================
+   HEADER / HERO
+   ============================================= */
+header {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 120px 20px 80px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.site-tagline {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 20px;
+  opacity: 0.8;
+  animation: fadeInDown 1s ease 0.2s both;
+}
+
+.site-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 700;
+  color: var(--text-heading);
+  line-height: 1.1;
+  margin-bottom: 16px;
+  animation: fadeInDown 1s ease 0.4s both;
+  text-shadow: 0 0 40px var(--accent-glow);
+  transition: text-shadow var(--transition-speed);
+}
+
+.site-subtitle {
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  animation: fadeInDown 1s ease 0.6s both;
+}
+
+/* Decorative line under header */
+.header-line {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 30px auto 0;
+  animation: fadeInDown 1s ease 0.8s both;
+  transition: background var(--transition-speed);
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   NAVIGATION
+   ============================================= */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 40px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  transition: border-color var(--transition-speed);
+}
+
+nav a {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s, text-shadow 0.3s;
+  position: relative;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+nav a:hover {
+  color: var(--accent);
+  text-shadow: 0 0 12px var(--accent-glow);
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* =============================================
+   MAIN CONTENT
+   ============================================= */
+main {
+  position: relative;
+  z-index: 10;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 80px 30px;
+}
+
+/* =============================================
+   SECTION HEADERS
+   ============================================= */
+.section-header {
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.section-number {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text-heading);
+  text-shadow: 0 0 30px var(--accent-glow);
+  transition: text-shadow var(--transition-speed), color var(--transition-speed);
+}
+
+.section-divider {
+  width: 40px;
+  height: 2px;
+  background: var(--accent);
+  margin-top: 16px;
+  transition: background var(--transition-speed);
+}
+
+/* =============================================
+   ABOUT SECTION
+   ============================================= */
+#about {
+  margin-bottom: 100px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.about-text p {
+  font-size: 14px;
+  line-height: 2;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  transition: color var(--transition-speed);
+}
+
+.about-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stat-item {
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--accent);
+  transition: all 0.3s;
+}
+
+.stat-item:hover {
+  border-left-color: var(--accent2);
+  transform: translateX(4px);
+  box-shadow: -4px 0 20px var(--accent-glow);
+}
+
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 16px;
+  color: var(--text-heading);
+  font-weight: 600;
+}
+
+/* =============================================
+   GAME SECTIONS
+   ============================================= */
+.game-section {
+  margin-bottom: 100px;
+}
+
+/* ---- Game Hero Banner ---- */
+.game-banner {
+  position: relative;
+  height: 220px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Silent Hill banner */
+#silenthill .game-banner {
+  background: 
+    radial-gradient(ellipse at center, #2a1a0e 0%, #0a0806 70%);
+}
+
+/* Crysis banner */
+#crysis .game-banner {
+  background: 
+    radial-gradient(ellipse at center, #052530 0%, #020d0e 70%);
+}
+
+.game-banner-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0.15;
+}
+
+/* SH banner pattern */
+#silenthill .game-banner-bg {
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 30px,
+      rgba(139,46,46,0.1) 30px,
+      rgba(139,46,46,0.1) 31px
+    );
+}
+
+/* Crysis banner pattern */
+#crysis .game-banner-bg {
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(0,229,255,0.05) 40px,
+      rgba(0,229,255,0.05) 41px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 40px,
+      rgba(0,229,255,0.05) 40px,
+      rgba(0,229,255,0.05) 41px
+    );
+}
+
+.game-banner-title {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 700;
+  color: var(--text-heading);
+  text-align: center;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  text-shadow: 0 0 60px var(--accent-glow), 0 0 20px var(--accent-glow);
+}
+
+/* Flickering effect for SH */
+body.theme-silenthill #silenthill .game-banner-title {
+  animation: flicker 8s infinite;
+}
+
+@keyframes flicker {
+  0%, 95%, 97%, 99%, 100% { opacity: 1; }
+  96%, 98% { opacity: 0.7; }
+}
+
+/* Scanning effect for Crysis */
+body.theme-crysis #crysis .game-banner-title {
+  animation: glitch 10s infinite;
+}
+
+@keyframes glitch {
+  0%, 90%, 100% { clip-path: none; transform: none; }
+  92% { clip-path: inset(20% 0 60% 0); transform: translate(-3px); }
+  94% { clip-path: inset(60% 0 20% 0); transform: translate(3px); }
+  96% { clip-path: none; transform: none; }
+}
+
+/* ---- Memory Cards ---- */
+.memories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.memory-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  cursor: default;
+}
+
+.memory-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s;
+}
+
+.memory-card:hover::before {
+  transform: scaleY(1);
+}
+
+.memory-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 20px var(--accent-glow);
+  border-color: var(--accent);
+}
+
+.memory-year {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.memory-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  color: var(--text-heading);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.memory-text {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--text-secondary);
+}
+
+/* Memory card image */
+.memory-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  margin-bottom: 16px;
+  filter: saturate(0.6) contrast(1.1);
+  transition: filter 0.4s;
+}
+
+.memory-card:hover .memory-image {
+  filter: saturate(0.8) contrast(1.2);
+}
+
+/* =============================================
+   QUOTE BLOCK
+   ============================================= */
+.game-quote {
+  margin: 40px 0;
+  padding: 30px 40px;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-card);
+  position: relative;
+}
+
+.game-quote::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  font-family: var(--font-heading);
+  font-size: 80px;
+  color: var(--accent);
+  opacity: 0.2;
+  line-height: 1;
+}
+
+.game-quote p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+.game-quote cite {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+/* =============================================
+   RATING DISPLAY
+   ============================================= */
+.game-rating {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  margin-bottom: 30px;
+}
+
+.rating-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.rating-score {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--accent-glow);
+}
+
+.rating-bars {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rating-bar {
+  height: 3px;
+  background: var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.rating-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 1s ease;
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+footer {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 60px 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.footer-text {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.footer-accent {
+  color: var(--accent);
+}
+
+/* =============================================
+   SCROLL REVEAL ANIMATION
+   ============================================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =============================================
+   CUSTOM SCROLLBAR
+   ============================================= */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  nav {
+    padding: 14px 20px;
+    gap: 24px;
+    font-size: 10px;
+  }
+  
+  .theme-switcher-container {
+    top: 16px;
+    right: 16px;
+  }
+  
+  .theme-label {
+    display: none;
+  }
+  
+  .memories-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================
+   SELECTION COLOR
+   ============================================= */
+::selection {
+  background: var(--accent);
+  color: var(--bg-primary);
+}
+
+/* =============================================
+   PLACEHOLDER IMAGE STYLES
+   (تا زمانی که عکس‌های واقعی اضافه کنی)
+   ============================================= */
+.img-placeholder {
+  width: 100%;
+  height: 140px;
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 16px;
 }

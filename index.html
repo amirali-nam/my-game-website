@@ -1,25 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>My Game World</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gaming Memories | Silent Hill & Crysis</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="silent-mode">
 
-    <div class="container">
-        <h1>Welcome to My World</h1>
-        <p>
-            Hi, I'm [Your Name]. I love games like Silent Hill and Crysis.
-            Here I share my memories and experiences with them.
-        </p>
+<!-- Default theme: Silent Hill -->
+<body class="theme-silenthill">
 
-        <!-- Toggle Button -->
-        <div class="toggle-container">
-            <div id="toggle"></div>
-        </div>
+  <!-- ===== TRANSITION OVERLAY ===== -->
+  <div class="transition-overlay" id="transitionOverlay"></div>
+
+  <!-- ===== FOG LAYER (ambient) ===== -->
+  <div class="fog-layer"></div>
+
+  <!-- ===== CRYSIS HUD CORNERS ===== -->
+  <div class="crysis-hud">
+    <div class="hud-corner tl"></div>
+    <div class="hud-corner tr"></div>
+    <div class="hud-corner bl"></div>
+    <div class="hud-corner br"></div>
+    <div class="hud-scanline"></div>
+  </div>
+
+  <!-- ===== PYRAMID HEAD FIGURE ===== -->
+  <div class="pyramid-head-figure" id="pyramidHead" aria-hidden="true">
+    <svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Body -->
+      <rect x="35" y="90" width="50" height="80" fill="#4a2020" opacity="0.9"/>
+      <!-- Great Knife (simplified) -->
+      <rect x="85" y="80" width="8" height="100" fill="#2a1a1a" rx="1"/>
+      <polygon points="85,80 93,80 89,50" fill="#3a2a2a"/>
+      <!-- Pyramid Head -->
+      <polygon points="20,90 100,90 60,0" fill="#5a3030"/>
+      <polygon points="30,90 90,90 60,10" fill="#3a1a1a"/>
+      <!-- Metal texture lines on helmet -->
+      <line x1="60" y1="5" x2="25" y2="87" stroke="#2a1a1a" stroke-width="1" opacity="0.6"/>
+      <line x1="60" y1="5" x2="95" y2="87" stroke="#2a1a1a" stroke-width="1" opacity="0.6"/>
+      <line x1="60" y1="5" x2="60" y2="90" stroke="#2a1a1a" stroke-width="1" opacity="0.4"/>
+      <!-- Legs -->
+      <rect x="37" y="168" width="18" height="32" fill="#3a2020"/>
+      <rect x="65" y="168" width="18" height="32" fill="#3a2020"/>
+      <!-- Arms -->
+      <rect x="15" y="92" width="20" height="10" fill="#4a2020" transform="rotate(15, 25, 97)"/>
+      <rect x="85" y="92" width="20" height="10" fill="#4a2020" transform="rotate(-10, 95, 97)"/>
+    </svg>
+  </div>
+
+  <!-- ===== THEME SWITCHER ===== -->
+  <div class="theme-switcher-container">
+    <span class="theme-label active" id="labelSH">Silent Hill</span>
+    <div class="slider-track" id="themeSlider" role="switch" aria-checked="false" tabindex="0" title="تغییر تم">
+      <div class="slider-thumb" id="sliderThumb">⚡</div>
     </div>
+    <span class="theme-label" id="labelCR">Crysis</span>
+  </div>
 
-    <script src="script.js"></script>
+  <!-- ===== NAVIGATION ===== -->
+  <nav>
+    <a href="#about">درباره من</a>
+    <a href="#silenthill">Silent Hill</a>
+    <a href="#crysis">Crysis</a>
+    <a href="#memories">خاطرات</a>
+  </nav>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <p class="site-tagline">personal gaming journal</p>
+    <h1 class="site-title" id="siteTitle">Gaming Memories</h1>
+    <p class="site-subtitle" id="siteSubtitle">where fog meets nanosuit</p>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main>
+
+    <!-- ============ ABOUT SECTION ============ -->
+    <section id="about" class="reveal">
+      <div class="section-header">
+        <span class="section-number">// 001</span>
+        <h2 class="section-title">درباره من</h2>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            سلام! من یه گیمر هستم که از بازی‌های با اتمسفر قوی لذت می‌برم.
+            دو تا بازی توی ذهنم حک شدن — یکی با مه و ترس و سکوت، یکی
+            با نانوسوت و جنگل و اکشن خالص.
+          </p>
+          <p>
+            این سایت جای شخصی منه برای نوشتن از خاطراتم با این بازی‌ها،
+            احساساتم وقتی اونا رو بازی کردم، و چرا هنوز بعد از سال‌ها
+            بهشون فکر می‌کنم.
+          </p>
+          <p>
+            از طرف راست می‌تونی بین دو تم جابه‌جا بشی — Silent Hill یا Crysis.
+          </p>
+        </div>
+
+        <div class="about-stats">
+          <div class="stat-item">
+            <div class="stat-label">اولین بازی</div>
+            <div class="stat-value">Silent Hill 2 — 2003</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">بهترین لحظه</div>
+            <div class="stat-value">اولین بار دیدن Pyramid Head</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">پلتفرم اصلی</div>
+            <div class="stat-value">PC</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">ژانر مورد علاقه</div>
+            <div class="stat-value">Atmospheric Horror / FPS</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SILENT HILL SECTION ============ -->
+    <section id="silenthill" class="game-section reveal">
+      <div class="game-banner">
+        <div class="game-banner-bg"></div>
+        <h2 class="game-banner-title">SILENT HILL</h2>
+      </div>
+
+      <div class="section-header">
+        <span class="section-number">// 002</span>
+        <h2 class="section-title">داستان من با Silent Hill</h2>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="game-rating">
+        <div>
+          <div class="rating-label">امتیاز شخصی</div>
+          <div class="rating-score">9.8</div>
+        </div>
+        <div class="rating-bars">
+          <div class="rating-bar"><div class="rating-bar-fill" style="width: 98%"></div></div>
+          <div class="rating-bar"><div class="rating-bar-fill" style="width: 90%"></div></div>
+          <div class="rating-bar"><div class="rating-bar-fill" style="width: 95%"></div></div>
+        </div>
+      </div>
+
+      <div class="game-quote">
+        <p>
+          وقتی اول Silent Hill 2 رو بازی کردم، فکر نمی‌کردم یه بازی بتونه اینقدر
+          توی ذهنم موندگار بشه. اون مه... اون صدای رادیو استاتیک... هنوز وقتی
+          یادم میاد پوست مرغی میشم.
+        </p>
+        <cite>— خاطره شخصی</cite>
+      </div>
+
+      <div class="memories-grid">
+        <div class="memory-card">
+          <div class="img-placeholder">[ Screenshot ]</div>
+          <div class="memory-year">اولین مواجهه</div>
+          <h3 class="memory-title">وقتی Pyramid Head رو دیدم</h3>
+          <p class="memory-text">
+            اولین بار که Pyramid Head از اون راهرو اومد بیرون،
+            کنترلر رو گذاشتم زمین. جدی می‌گم. ده دقیقه نگاه
+            کردم. هیچ بازی‌ای قبلش همچین حسی بهم نداده بود.
+          </p>
+        </div>
+
+        <div class="memory-card">
+          <div class="img-placeholder">[ Screenshot ]</div>
+          <div class="memory-year">Otherworld</div>
+          <h3 class="memory-title">دنیای دیگه</h3>
+          <p class="memory-text">
+            اون لحظه که محیط عوض میشه — از خیابون‌های مه‌آلود به اون
+            فلز و زنجیر و تاریکی — هنوز بعد از سال‌ها یادمه چقدر حس
+            بدی بهم داد. به بهترین معنا.
+          </p>
+        </div>
+
+        <div class="memory-card">
+          <div class="img-placeholder">[ Screenshot ]</div>
+          <div class="memory-year">Soundtrack</div>
+          <h3 class="memory-title">موسیقی Akira Yamaoka</h3>
+          <p class="memory-text">
+            موسیقی Yamaoka یه سطح دیگه‌ست. "Promise (Reprise)"
+            رو هنوز گوش میدم. هر بار یاد اون بازی میفتم.
+            این موسیقی بود که بازی رو از خوب به فراموش‌نشدنی رسوند.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CRYSIS SECTION ============ -->
+    <section id="crysis" class="game-section reveal">
+      <div class="game-banner">
+        <div class="game-banner-bg"></div>
+        <h2 class="game-banner-title">CRYSIS</h2>
+      </div>
+
+      <div class="section-header">
+        <span class="section-number">// 003</span>
+        <h2 class="section-title">داستان من با Crysis</h2>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="game-rating">
+        <div>
+          <div class="rating-label">امتیاز شخصی</div>
+          <div class="rating-score">9.5</div>
+        </div>
+        <div class="rating-bars">
+          <div class="rating-bar"><div class="rating-bar-fill" style="width: 95%"></div></div>
+          <div class="rating-bar"><div class="rating-bar-fill" style="width: 100%"></div></div>
+          <div class="rating-bar"><div class="rating-bar-fill" style="width: 92%"></div></div>
+        </div>
+      </div>
+
+      <div class="game-quote">
+        <p>
+          Crysis برای من یعنی آزادی. یعنی نانوسوت بپوش، برو توی اون
+          جنگل، و هر جور که دلت خواست دشمن‌ها رو از بین ببر. هیچ بازی
+          قبلش اینقدر حس "قدرت" بهم نداده بود.
+        </p>
+        <cite>— خاطره شخصی</cite>
+      </div>
+
+      <div class="memories-grid">
+        <div class="memory-card">
+          <div class="img-placeholder">[ Screenshot ]</div>
+          <div class="memory-year">آشنایی</div>
+          <h3 class="memory-title">اولین بار که Crysis رو دیدم</h3>
+          <p class="memory-text">
+            یه ویدیو از گرافیک Crysis توی یه مجله CD دیدم — بله مجله!
+            فکر کردم این رندر کامپیوتریه. بعد فهمیدم بازی‌ه.
+            همون روز دنبالش گشتم.
+          </p>
+        </div>
+
+        <div class="memory-card">
+          <div class="img-placeholder">[ Screenshot ]</div>
+          <div class="memory-year">Nanosuit</div>
+          <h3 class="memory-title">قدرت Nanosuit</h3>
+          <p class="memory-text">
+            Maximum Strength، یه درخت رو از ریشه کندم و پرتاب
+            کردم طرف یه جیپ. بازی داشت بهم می‌گفت: هر چیزی
+            که تو ذهنت هست، اینجا میشه انجامش.
+          </p>
+        </div>
+
+        <div class="memory-card">
+          <div class="img-placeholder">[ Screenshot ]</div>
+          <div class="memory-year">گرافیک</div>
+          <h3 class="memory-title">وقتی کامپیوترم ذوب شد</h3>
+          <p class="memory-text">
+            تنظیمات رو گذاشتم روی High. FPS افتاد به ۱۲.
+            نه تنظیمات رو عوض کردم، نه بازی رو بستم.
+            فقط نگاه کردم به اون آب و اون برگ‌ها.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MEMORIES SECTION ============ -->
+    <section id="memories" class="reveal">
+      <div class="section-header">
+        <span class="section-number">// 004</span>
+        <h2 class="section-title">خاطرات بیشتر</h2>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="memories-grid">
+        <div class="memory-card">
+          <div class="memory-year">مقایسه</div>
+          <h3 class="memory-title">دو دنیای متفاوت، یه احساس</h3>
+          <p class="memory-text">
+            Silent Hill با ترس بهت قدرت میده. Crysis با قدرت بهت
+            آزادی میده. هر دو یه حس دارن: احساس اینکه یه دنیا
+            فقط مال توئه.
+          </p>
+        </div>
+
+        <div class="memory-card">
+          <div class="memory-year">کامیونیتی</div>
+          <h3 class="memory-title">وقتی همه داشتن حرف میزدن</h3>
+          <p class="memory-text">
+            یادمه انجمن‌های ایرانی اون موقع پر بود از بحث این دو بازی.
+            Silent Hill یا Crysis؟ دو دسته کاملاً جدا. من هر دوشون بودم.
+          </p>
+        </div>
+
+        <div class="memory-card">
+          <div class="memory-year">الان</div>
+          <h3 class="memory-title">هنوز برمیگردم</h3>
+          <p class="memory-text">
+            هر چند وقت یه بار یه رانِ جدید میزنم. Silent Hill 2
+            با Remake، Crysis Remastered. بعضی چیزا پیر نمیشن.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p class="footer-text">
+      ساخته شده با <span class="footer-accent">❤</span> برای بازی‌هایی که فراموش نمیشن
+    </p>
+    <p class="footer-text" style="margin-top: 8px; font-size: 10px; opacity: 0.5;">
+      Silent Hill © Konami &nbsp;|&nbsp; Crysis © Crytek
+    </p>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script src="script.js"></script>
+
 </body>
 </html>
