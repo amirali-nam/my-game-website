@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+    font-family: Arial;
+    transition: 0.5s;
+}
+
+/* Silent Hill Mode */
+.silent-mode {
+    background: #111;
+    color: #ccc;
+}
+
+/* Crysis Mode */
+.crysis-mode {
+    background: #0f2027;
+    color: #00ffcc;
+}
+
+/* Container */
+.container {
+    text-align: center;
+    padding: 50px;
+}
+
+/* Toggle */
+.toggle-container {
+    width: 100px;
+    height: 50px;
+    background: #444;
+    border-radius: 50px;
+    margin: 20px auto;
+    position: relative;
+    cursor: pointer;
+}
+
+#toggle {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    transition: 0.4s;
+}
+
+/* وقتی تم عوض میشه */
+.crysis-mode #toggle {
+    left: 55px;
+    background: #00ffcc;
+}
